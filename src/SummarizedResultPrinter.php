@@ -3,10 +3,12 @@ namespace Fumizp\php7ccc;
 
 
 use Sstalle\php7cc\CLIOutputInterface;
+use Sstalle\php7cc\CLIResultPrinter;
 use Sstalle\php7cc\CompatibilityViolation\CheckMetadata;
 use Sstalle\php7cc\CompatibilityViolation\ContextInterface;
 use Sstalle\php7cc\CompatibilityViolation\Message;
 use Sstalle\php7cc\Error\CheckError;
+use Sstalle\php7cc\NodeStatementsRemover;
 use Sstalle\php7cc\ResultPrinterInterface;
 use PhpParser\PrettyPrinter\Standard as StandardPrettyPrinter;
 
@@ -37,16 +39,21 @@ class SummarizedResultPrinter implements ResultPrinterInterface
      */
     private $contexts = [];
 
+    private $cliPrinter;
+
     /**
-     * @param CLIOutputInterface    $output
+     * @param CLIOutputInterface $output
      * @param StandardPrettyPrinter $prettyPrinter
+     * @param NodeStatementsRemover $nodeStatementsRemover
      */
     public function __construct(
         CLIOutputInterface $output,
-        StandardPrettyPrinter $prettyPrinter
+        StandardPrettyPrinter $prettyPrinter,
+        NodeStatementsRemover $nodeStatementsRemover
     ) {
         $this->output = $output;
         $this->prettyPrinter = $prettyPrinter;
+        $this->cliPrinter = new CLIResultPrinter($output, $prettyPrinter, $nodeStatementsRemover);
     }
 
     /**
@@ -54,6 +61,8 @@ class SummarizedResultPrinter implements ResultPrinterInterface
      */
     public function printContext(ContextInterface $context)
     {
+        $this->cliPrinter->printContext($context);
+
         if (!$context->hasMessagesOrErrors()) {
             return;
         }
@@ -74,6 +83,7 @@ class SummarizedResultPrinter implements ResultPrinterInterface
      */
     public function printMetadata(CheckMetadata $metadata)
     {
+        $this->cliPrinter->printMetadata($metadata);
     }
 
     private function addFile(ContextInterface $context)
