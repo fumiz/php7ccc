@@ -1,0 +1,21 @@
+{
+  "name": "fmizp/php7ccc",
+  "type": "project",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "Fumizp\\php7ccc\\": "src/"
+    }
+  },
+  "require": {
+    "php": ">=5.4",
+    "symfony/console": "~2.3 || ~3.0",
+    "sstalle/php7cc": "~1.1.0"
+  },
+  "require-dev": {
+    "squizlabs/php_codesniffer": "2.*"
+  },
+  "bin": [
+    "bin/php7ccc"
+  ]
+}
