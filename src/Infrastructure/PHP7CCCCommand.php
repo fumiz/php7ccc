@@ -63,7 +63,11 @@ class PHP7CCCCommand extends PHP7CCCommand
         $containerBuilder = new ContainerBuilder();
         $container = $containerBuilder->buildContainer($output, $intSize);
         $container['resultPrinter'] = function ($c) {
-            return new \Fumizp\php7ccc\SummarizedResultPrinter($c['output'], $c['nodePrinter'], $c['nodeStatementsRemover']);
+            return new \Fumizp\php7ccc\SummarizedResultPrinter(
+                $c['output'],
+                $c['nodePrinter'],
+                $c['nodeStatementsRemover']
+            );
         };
 
         $checkSettings = new PathCheckSettings($paths, $extensions);

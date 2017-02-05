@@ -1,7 +1,6 @@
 <?php
 namespace Fumizp\php7ccc;
 
-
 use Sstalle\php7cc\CLIOutputInterface;
 use Sstalle\php7cc\CLIResultPrinter;
 use Sstalle\php7cc\CompatibilityViolation\CheckMetadata;
@@ -103,31 +102,37 @@ class SummarizedResultPrinter implements ResultPrinterInterface
         $this->output->writeln('errors');
         $this->output->writeln('--------------------');
         $sortedMessages = $this->getSortedErrors();
-        foreach($sortedMessages as $message) {
+        foreach ($sortedMessages as $message) {
             $this->output->writeln(sprintf("%d\t%d\t%s", $message['score'], $message['level'], $message['error']));
         }
         $this->output->writeln('messages');
         $this->output->writeln('--------------------');
         $sortedMessages = $this->getSortedMessages();
-        foreach($sortedMessages as $message) {
+        foreach ($sortedMessages as $message) {
             $this->output->writeln(sprintf("%d\t%s", $message['score'], $message['message']));
         }
         $this->output->writeln('');
         $this->output->writeln('files');
         $this->output->writeln('--------------------');
         $sortedContexts = $this->getSortedProblemFiles();
-        foreach($sortedContexts as $context) {
+        foreach ($sortedContexts as $context) {
             /**
              * @var ContextInterface $context
              */
-            $this->output->writeln(sprintf("%d\t%s", count($context->getMessages()), $context->getCheckedResourceName()));
+            $this->output->writeln(
+                sprintf(
+                    "%d\t%s",
+                    count($context->getMessages()),
+                    $context->getCheckedResourceName()
+                )
+            );
         }
     }
 
     public function getSortedProblemFiles()
     {
         $sortedContexts = $this->contexts;
-        usort($sortedContexts, function(ContextInterface $aContext, ContextInterface $bContext){
+        usort($sortedContexts, function (ContextInterface $aContext, ContextInterface $bContext) {
             $a = count($aContext->getMessages());
             $b = count($bContext->getMessages());
             if ($a === $b) {
@@ -154,7 +159,7 @@ class SummarizedResultPrinter implements ResultPrinterInterface
             $sortedMessages[$rawText]['score']++;
             $sortedMessages[$rawText]['messages'][] = $message;
         }
-        usort($sortedMessages, function($aMessage, $bMessage){
+        usort($sortedMessages, function ($aMessage, $bMessage) {
             $a = $aMessage['score'];
             $b = $bMessage['score'];
             if ($a === $b) {
@@ -180,7 +185,7 @@ class SummarizedResultPrinter implements ResultPrinterInterface
             $sortedErrors[$rawText]['score']++;
             $sortedErrors[$rawText]['errors'][] = $error;
         }
-        usort($sortedErrors, function($aError, $bError){
+        usort($sortedErrors, function ($aError, $bError) {
             $a = $aError['score'];
             $b = $bError['score'];
             if ($a === $b) {
@@ -189,6 +194,5 @@ class SummarizedResultPrinter implements ResultPrinterInterface
             return ($a > $b) ? -1 : 1;
         });
         return $sortedErrors;
-
     }
 }
